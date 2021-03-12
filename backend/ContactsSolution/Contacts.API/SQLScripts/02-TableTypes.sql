@@ -1,0 +1,11 @@
+﻿CREATE TYPE dbo.IDList AS TABLE (
+ID INT NOT NULL
+)
+GO
+
+CREATE TYPE dbo.PhoneNumberList AS TABLE (
+ID INT NOT NULL,
+PhoneNumberTypeID INT NOT NULL,
+PhoneNumber VARCHAR(20) NOT NULL
+)
+GO
