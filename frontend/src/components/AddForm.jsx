@@ -61,7 +61,7 @@ const AddForm = ({ isVisible, handleOk, handleCancel }) => {
       setContact({});
     }
     console.log(contact);
-  }, [contactID, contact]);
+  }, [contactID]);
 
   const onFinish = (values) => {
     const data = {
@@ -118,7 +118,7 @@ const AddForm = ({ isVisible, handleOk, handleCancel }) => {
 
   useEffect(() => {
     setDate(contact.dob.format("YYYY-MM-DD"));
-  }, [contact.dob]);
+  }, [contact]);
 
   contact.dob = contact ? moment(contact.dob) : null;
 
