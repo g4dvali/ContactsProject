@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using DbUp;
 using System.IO;
 using Contacts.API.Data;
+using Contacts.API.Data.Caching;
 
 namespace Contacts.API
 {
@@ -25,10 +26,22 @@ namespace Contacts.API
         }
 
         public IConfiguration Configuration { get; }
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            #region EnableCors
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader().Build();
+                                  });
+            });
+            #endregion
+
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             EnsureDatabase.For.SqlDatabase(connectionString, null);
             var upgrader = DeployChanges.To
@@ -49,6 +62,9 @@ namespace Contacts.API
             });
 
             services.AddScoped<IDataRepository, DataRepository>();
+
+            services.AddMemoryCache();
+            services.AddSingleton<IContactCache, ContactCache>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,6 +81,7 @@ namespace Contacts.API
                 app.UseHttpsRedirection();
             }
 
+            app.UseCors(MyAllowSpecificOrigins);
             app.UseRouting();
 
             app.UseAuthorization();

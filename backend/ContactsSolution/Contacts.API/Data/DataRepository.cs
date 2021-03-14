@@ -15,7 +15,6 @@ namespace Contacts.API.Data
 {
     public class DataRepository : IDataRepository
     {
-
         #region Fields
         private readonly string _connectionString;
         #endregion
@@ -191,9 +190,9 @@ namespace Contacts.API.Data
                     queryParameters.Add("@Lastname", contactModel.Lastname);
                     queryParameters.Add("@DOB", contactModel.DOB);
                     queryParameters.Add("@GenderID", contactModel.GenderID);
-                    queryParameters.Add("@CityID", contactModel.CityID);
-                    queryParameters.Add("@Address", contactModel.Address);
-                    queryParameters.Add("@AdditionalDetails", contactModel.AdditionalDetails);
+                    queryParameters.Add("@CityID", contactModel.CityID == 0 ? null : contactModel.CityID);
+                    queryParameters.Add("@Address", String.IsNullOrWhiteSpace(contactModel.Address) ? null : contactModel.Address);
+                    queryParameters.Add("@AdditionalDetails", String.IsNullOrWhiteSpace(contactModel.AdditionalDetails) ? null : contactModel.AdditionalDetails);
                     queryParameters.Add("@IsFavorite", contactModel.IsFavorite);
                     queryParameters.Add("@ContactPhoto", contactModel.ContactPhoto, DbType.Binary);
                     queryParameters.Add("@CityActionID", contactModel.CityActionID);
@@ -225,14 +224,14 @@ namespace Contacts.API.Data
                 connection.Open();
 
                 var queryParameters = new DynamicParameters();
-                queryParameters.Add("@ContactID", contactModel.ContactID);
+                queryParameters.Add("@ContactID", contactID);
                 queryParameters.Add("@Firstname", contactModel.Firstname);
                 queryParameters.Add("@Lastname", contactModel.Lastname);
                 queryParameters.Add("@DOB", contactModel.DOB);
                 queryParameters.Add("@GenderID", contactModel.GenderID);
-                queryParameters.Add("@CityID", contactModel.CityID);
-                queryParameters.Add("@Address", contactModel.Address);
-                queryParameters.Add("@AdditionalDetails", contactModel.AdditionalDetails);
+                queryParameters.Add("@CityID", contactModel.CityID == 0 ? null : contactModel.CityID);
+                queryParameters.Add("@Address", String.IsNullOrWhiteSpace(contactModel.Address) ? null : contactModel.Address);
+                queryParameters.Add("@AdditionalDetails", String.IsNullOrWhiteSpace(contactModel.AdditionalDetails) ? null : contactModel.AdditionalDetails);
                 queryParameters.Add("@ContactPhoto", contactModel.ContactPhoto, DbType.Binary);
                 queryParameters.Add("@IsFavorite", contactModel.IsFavorite);
                 queryParameters.Add("@CityActionID", contactModel.CityActionID);

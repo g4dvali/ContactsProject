@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Contacts.API.Data;
 using Contacts.API.Data.Models;
+using Contacts.API.Data.Caching;
 
 namespace Contacts.API.Controllers
 {
@@ -15,20 +16,36 @@ namespace Contacts.API.Controllers
     {
         #region Fields
         private readonly IDataRepository _dataRepository;
+        private readonly IContactCache _cache;
         private int _statusCode;
         private string _errorText;
         #endregion
 
         #region Ctor
-
-        public ContactsController(IDataRepository dataRepository)
+        public ContactsController(IDataRepository dataRepository, IContactCache contactCache)
         {
             _dataRepository = dataRepository;
+            _cache = contactCache;
         }
-
         #endregion
 
         #region GET
+
+        [HttpGet("{contactID}")]
+        public async Task<ActionResult<ContactModel>> GetContact(int contactID)
+        {
+            var contact = _cache.Get(contactID);
+            if (contact == null)
+            {
+                contact = await _dataRepository.GetContact(contactID);
+                if (contact == null)
+                {
+                    return NotFound();
+                }
+                _cache.Set(contact);
+            }
+            return contact;
+        }
 
         [HttpGet]
         public async Task<IEnumerable<ContactsListModel>> GetContacts(string searchText)
@@ -59,17 +76,6 @@ namespace Contacts.API.Controllers
         public async Task<IEnumerable<ContactsListModel>> GetContactsSearchByDetails(string firstname, string lastname, DateTime dob, string address, string phoneNumber)
         {
             return await _dataRepository.GetContactsSearchByDetails(firstname, lastname, dob, address, phoneNumber);
-        }
-
-        [HttpGet("{contactID}")]
-        public async Task<ActionResult<ContactModel>> GetContact(int contactID)
-        {
-            var contact = await _dataRepository.GetContact(contactID);
-            if (contact == null)
-            {
-                return NotFound();
-            }
-            return contact;
         }
 
         [HttpGet("city")]
@@ -110,7 +116,7 @@ namespace Contacts.API.Controllers
         #region Post/Put
 
         [HttpPost]
-        public async Task<ActionResult<ContactModel>> PostContact(ContactModel contactModel)
+        public async Task<ActionResult> PostContact(ContactModel contactModel)
         {
             var validation = await Validate(contactModel, false);
             if (!validation)
@@ -127,6 +133,11 @@ namespace Contacts.API.Controllers
         [HttpPut("{contactID}")]
         public async Task<ActionResult<ContactModel>> PutContact(int contactID, ContactModel contactModel)
         {
+            if (contactID == 0)
+            {
+                return StatusCode(400, "Please pass Contact ID");
+            }
+
             var contact = await _dataRepository.GetContact(contactID);
             if (contact == null)
             {
@@ -151,12 +162,14 @@ namespace Contacts.API.Controllers
                 contactModel.CityName = string.IsNullOrEmpty(contactModel.CityName) ? contact.CityName : contactModel.CityName;
 
                 var savedContact = await _dataRepository.PutContact(contactModel, contactID);
+                _cache.Remove(savedContact.ContactID);
+
                 return savedContact;
             }
         }
 
         [HttpDelete("{contactID}")]
-        public async Task<ActionResult> DeleteQuestion(int contactID)
+        public async Task<ActionResult> DeleteContact(int contactID)
         {
             var contact = await _dataRepository.GetContact(contactID);
             if (contact == null)
@@ -164,6 +177,8 @@ namespace Contacts.API.Controllers
                 return NotFound();
             }
             await _dataRepository.DeleteContacts(contactID);
+            _cache.Remove(contactID);
+
             return NoContent();
         }
 
@@ -175,20 +190,30 @@ namespace Contacts.API.Controllers
             {
                 return NotFound();
             }
+
             await _dataRepository.ContactsAddFavorite(contactID);
+            _cache.Remove(contactID);
+
             return NoContent();
         }
 
         #endregion
 
         #region Validation
+
         public async Task<bool> Validate(ContactModel contactModel, bool isUpdate)
         {
+            if (CheckMultiLingual(contactModel.Firstname + contactModel.Lastname))
+            {
+                _statusCode = 400;
+                _errorText = "Please use only English, or only Georgian letters for Firstname and Lastname.";
+                return false;
+            }
+
             if (contactModel.CityActionID == true && string.IsNullOrWhiteSpace(contactModel.CityName))
             {
                 _statusCode = 400;
                 _errorText = "City Name must be filled in.";
-
                 return false;
             }
             else if (contactModel.CityID > 0 && contactModel.CityActionID == true)
@@ -199,12 +224,17 @@ namespace Contacts.API.Controllers
             }
             else if (contactModel.CityActionID == true)
             {
+                if (contactModel.CityName.Any(e => IsGeorgian(e)))
+                {
+                    _statusCode = 400;
+                    _errorText = "Please enter only English letters for city name.";
+                    return false;
+                }
                 var cityExist = await _dataRepository.CityExists(contactModel.CityName);
                 if (cityExist)
                 {
                     _statusCode = 409;
                     _errorText = $"City name: '{contactModel.CityName}' already exists.";
-
                     return false;
                 }
             }
@@ -233,12 +263,28 @@ namespace Contacts.API.Controllers
                 }
             }
 
+            if (!PhoneNumbersIsValid(contactModel, isUpdate))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool PhoneNumbersIsValid(ContactModel contactModel, bool isUpdate)
+        {
             if (isUpdate)
             {
                 if (contactModel.PhoneNumbers == null)
                 {
                     _statusCode = 400;
-                    _errorText = "Please add at least one phone number.";
+                    _errorText = "Please add at least one Phone Number.";
+                    return false;
+                }
+                else if (contactModel.PhoneNumbers.Any(pn => pn.PhoneNumberTypeID == 0 | String.IsNullOrWhiteSpace(pn.PhoneNumber)))
+                {
+                    _statusCode = 400;
+                    _errorText = "Please select Phone Type, or add the Phone Number.";
                     return false;
                 }
             }
@@ -247,13 +293,34 @@ namespace Contacts.API.Controllers
                 if (contactModel.PhoneNumbersPost == null)
                 {
                     _statusCode = 400;
-                    _errorText = "Please add at least one phone number.";
+                    _errorText = "Please add at least one Phone Number.";
+                    return false;
+                }
+                else if (contactModel.PhoneNumbersPost.Any(pn => pn.PhoneNumberTypeID == 0 | String.IsNullOrWhiteSpace(pn.PhoneNumber)))
+                {
+                    _statusCode = 400;
+                    _errorText = "Please select Phone Type, or add the Phone Number.";
                     return false;
                 }
             }
-
             return true;
         }
+
+        public static bool CheckMultiLingual(string text)
+        {
+            return text.Any(e => IsEnglish(e)) && text.Any(e => IsGeorgian(e));
+        }
+
+        public static bool IsEnglish(char c)
+        {
+            return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+        }
+
+        public static bool IsGeorgian(char c)
+        {
+            return c >= 'ა' && c <= 'ჰ';
+        }
+
         #endregion
     }
 }

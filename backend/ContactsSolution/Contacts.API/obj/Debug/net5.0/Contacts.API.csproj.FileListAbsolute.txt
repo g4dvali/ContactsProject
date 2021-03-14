@@ -59,3 +59,4 @@ C:\Users\g4dva\Documents\#1 Projects\ContactsProject\backend\ContactsSolution\Co
 C:\Users\g4dva\Documents\#1 Projects\ContactsProject\backend\ContactsSolution\Contacts.API\bin\Debug\net5.0\OcrData\Georgian.ocrdata
 C:\Users\g4dva\Documents\#1 Projects\ContactsProject\backend\ContactsSolution\Contacts.API\bin\Debug\net5.0\IronOcr.Assets.dll
 C:\Users\g4dva\Documents\#1 Projects\ContactsProject\backend\ContactsSolution\Contacts.API\bin\Debug\net5.0\IronOcr.dll
+C:\Users\g4dva\Documents\#1 Projects\ContactsProject\backend\ContactsSolution\Contacts.API\obj\Debug\net5.0\Contacts.API.csprojAssemblyReference.cache

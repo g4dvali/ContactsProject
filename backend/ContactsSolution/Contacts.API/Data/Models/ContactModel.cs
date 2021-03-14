@@ -8,7 +8,7 @@ namespace Contacts.API.Data.Models
 {
     public class ContactModel
     {
-        public int? ContactID { get; set; }
+        public int ContactID { get; set; }
 
         [Display(Name = "Gender")]
         [Required(ErrorMessage = "Gender is required.")]
@@ -18,13 +18,13 @@ namespace Contacts.API.Data.Models
 
         [Display(Name = "Firstname")]
         [StringLength(100, MinimumLength = 3, ErrorMessage = "Length betwwen 3 and 100")]
-        [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "Characters are not allowed.")]
+        //[RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "Characters are not allowed.")]
         [Required(ErrorMessage = "Firstname is required.")]
         public string Firstname { get; set; }
 
         [Display(Name = "Lastname")]
         [StringLength(100, MinimumLength = 3, ErrorMessage = "Length betwwen 3 and 100")]
-        [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "Characters are not allowed.")]
+        //[RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "Characters are not allowed.")]
         [Required(ErrorMessage = "Lastname is required.")]
         public string Lastname { get; set; }
 
