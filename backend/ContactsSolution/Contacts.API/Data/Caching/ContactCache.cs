@@ -33,7 +33,7 @@ namespace Contacts.API.Data.Caching
 
         public void Set(ContactModel contactModel)
         {
-            var cacheEntryOptions = new MemoryCacheEntryOptions().SetSize(1);
+            var cacheEntryOptions = new MemoryCacheEntryOptions().SetSize(100);
             _cache.Set(GetCacheKey(contactModel.ContactID), contactModel, cacheEntryOptions);
         }
 

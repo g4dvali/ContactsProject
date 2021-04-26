@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\g4dva\\Documents\\#1 Projects\\ContactsProject\\backend\\ContactsSolution\\Contacts.API\\Contacts.API.csproj": {}
+    "C:\\Users\\g4dva\\Documents\\Projects\\ContactsProject\\backend\\ContactsSolution\\Contacts.API\\Contacts.API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\g4dva\\Documents\\#1 Projects\\ContactsProject\\backend\\ContactsSolution\\Contacts.API\\Contacts.API.csproj": {
+    "C:\\Users\\g4dva\\Documents\\Projects\\ContactsProject\\backend\\ContactsSolution\\Contacts.API\\Contacts.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\g4dva\\Documents\\#1 Projects\\ContactsProject\\backend\\ContactsSolution\\Contacts.API\\Contacts.API.csproj",
+        "projectUniqueName": "C:\\Users\\g4dva\\Documents\\Projects\\ContactsProject\\backend\\ContactsSolution\\Contacts.API\\Contacts.API.csproj",
         "projectName": "Contacts.API",
-        "projectPath": "C:\\Users\\g4dva\\Documents\\#1 Projects\\ContactsProject\\backend\\ContactsSolution\\Contacts.API\\Contacts.API.csproj",
+        "projectPath": "C:\\Users\\g4dva\\Documents\\Projects\\ContactsProject\\backend\\ContactsSolution\\Contacts.API\\Contacts.API.csproj",
         "packagesPath": "C:\\Users\\g4dva\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\g4dva\\Documents\\#1 Projects\\ContactsProject\\backend\\ContactsSolution\\Contacts.API\\obj\\",
+        "outputPath": "C:\\Users\\g4dva\\Documents\\Projects\\ContactsProject\\backend\\ContactsSolution\\Contacts.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -19,7 +19,6 @@
         ],
         "configFilePaths": [
           "C:\\Users\\g4dva\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 18.2.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -27,7 +26,6 @@
           "net5.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\DevExpress 18.2\\Components\\System\\Components\\Packages": {},
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
@@ -47,6 +45,10 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "Casbin.NET": {
+              "target": "Package",
+              "version": "[1.7.2, )"
+            },
             "Dapper": {
               "target": "Package",
               "version": "[2.0.78, )"
@@ -54,6 +56,10 @@
             "IronOcr.Languages.Georgian": {
               "target": "Package",
               "version": "[2020.11.2, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[5.0.5, )"
             },
             "Microsoft.Data.SqlClient": {
               "target": "Package",
@@ -90,7 +96,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }

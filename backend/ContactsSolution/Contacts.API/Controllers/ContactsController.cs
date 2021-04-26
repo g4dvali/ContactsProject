@@ -7,9 +7,17 @@ using System.Threading.Tasks;
 using Contacts.API.Data;
 using Contacts.API.Data.Models;
 using Contacts.API.Data.Caching;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Contacts.API.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class ContactsController : ControllerBase
@@ -17,15 +25,18 @@ namespace Contacts.API.Controllers
         #region Fields
         private readonly IDataRepository _dataRepository;
         private readonly IContactCache _cache;
+        private readonly IConfiguration _configuration;
+
         private int _statusCode;
         private string _errorText;
         #endregion
 
         #region Ctor
-        public ContactsController(IDataRepository dataRepository, IContactCache contactCache)
+        public ContactsController(IDataRepository dataRepository, IContactCache contactCache, IConfiguration configuration)
         {
             _dataRepository = dataRepository;
             _cache = contactCache;
+            _configuration = configuration;
         }
         #endregion
 
@@ -322,5 +333,32 @@ namespace Contacts.API.Controllers
         }
 
         #endregion
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("GenerateToken")]
+        public string GenerateToken()
+        {
+            var claims = new[]
+            {
+                        //new Claim("PersonalId", userLoginFromDb.UserName),
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                        new Claim("UserID", "Dvali")
+            };
+
+            var token = new JwtSecurityToken
+            (
+                issuer: _configuration["Token:Issuer"],
+                audience: _configuration["Token:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(60), //TODO: უნდა შემცირდეს 60 წუთზე შემდეგ
+                notBefore: DateTime.UtcNow,
+                signingCredentials: new SigningCredentials(new SymmetricSecurityKey
+                            (Encoding.UTF8.GetBytes(_configuration["Token:Key"])),
+                        SecurityAlgorithms.HmacSha256)
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
     }
 }
