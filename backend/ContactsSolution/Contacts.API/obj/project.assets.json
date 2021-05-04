@@ -7129,25 +7129,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\g4dva\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\DigitalTV\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\g4dva\\Documents\\Projects\\ContactsProject\\backend\\ContactsSolution\\Contacts.API\\Contacts.API.csproj",
+      "projectUniqueName": "C:\\DigitalTV\\ContactsProject\\backend\\ContactsSolution\\Contacts.API\\Contacts.API.csproj",
       "projectName": "Contacts.API",
-      "projectPath": "C:\\Users\\g4dva\\Documents\\Projects\\ContactsProject\\backend\\ContactsSolution\\Contacts.API\\Contacts.API.csproj",
-      "packagesPath": "C:\\Users\\g4dva\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\g4dva\\Documents\\Projects\\ContactsProject\\backend\\ContactsSolution\\Contacts.API\\obj\\",
+      "projectPath": "C:\\DigitalTV\\ContactsProject\\backend\\ContactsSolution\\Contacts.API\\Contacts.API.csproj",
+      "packagesPath": "C:\\Users\\DigitalTV\\.nuget\\packages\\",
+      "outputPath": "C:\\DigitalTV\\ContactsProject\\backend\\ContactsSolution\\Contacts.API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\g4dva\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\DigitalTV\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],

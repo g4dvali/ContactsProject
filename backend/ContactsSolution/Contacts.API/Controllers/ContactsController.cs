@@ -351,14 +351,16 @@ namespace Contacts.API.Controllers
                 issuer: _configuration["Token:Issuer"],
                 audience: _configuration["Token:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(60), //TODO: უნდა შემცირდეს 60 წუთზე შემდეგ
+                expires: DateTime.UtcNow.AddMinutes(60), 
                 notBefore: DateTime.UtcNow,
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey
                             (Encoding.UTF8.GetBytes(_configuration["Token:Key"])),
                         SecurityAlgorithms.HmacSha256)
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var generatedToken = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return generatedToken;
         }
     }
 }
